@@ -1,0 +1,29 @@
+name: Fortify scan
+on:
+  workflow_call:
+   inputs:
+     SourcePath:
+     required: false
+     type: string
+     env:
+      FortifyPath: D:\Fortify\bin
+      FortifyReportFormat: PDF
+      FortifyReportType: DeveloperWorkBench
+      
+jobs:
+ Testing:
+  name: test
+  runs-on: [self-hosted]
+ # using: composite
+  steps:
+  - uses: actions/checkout@v3
+  - name: Fortify scan
+    shell: powershell
+    run: 
+       powershell -ExecutionPolicy Bypass -File '.\FortifyScan.ps1'
+       -SourcePath  {{ inputs.SourcePath }}
+       -FortifyToken {{ secrets.FortifyToken }}
+       -FortifyURL {{ secrets.FortifyURL }} 
+       -FortifyApplicationID {{ encvApplicationID }} 
+       -FortifyPath {{ env.FortifyPath }}
+  
